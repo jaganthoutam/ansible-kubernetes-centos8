@@ -43,12 +43,12 @@
     state: installed
   tags: install_utils
 
-#- name: Install Kubernetes Repository
-#  copy:
-#    src: kubernetes.repo
-#    dest: /etc/yum.repos.d/kubernetes.repo
-#    mode: 0644
-#  tags: add_kubernetes_repo
+- name: Install Kubernetes Repository
+  copy:
+    src: kubernetes.repo
+    dest: /etc/yum.repos.d/kubernetes.repo
+    mode: 0644
+  tags: add_kubernetes_repo
 
 - name: Install Kubernetes packages
   yum:
@@ -77,7 +77,7 @@
   tags: start_kubelet
 
 - name: Start master node
-  shell: "kubeadm init --apiserver-advertise-address=192.168.5.5 --pod-network-cidr=10.244.0.0/16"
+  shell: "kubeadm init --pod-network-cidr=10.244.0.0/16"
   register: kubeadm_init
   when: inventory_hostname in groups['kubernetes_master']
   tags: init_kubernetes_master
@@ -104,26 +104,35 @@
   when: inventory_hostname in groups['kubernetes_master']
   tags: get_k8s_version
 
-- name: Install overlay network
-  shell: "kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f 'https://cloud.weave.works/k8s/net?k8s-version={{ hostvars[groups['kubernetes_master'][0]].k8s_version.stdout }}'"
-  when: inventory_hostname in groups['kubernetes_master']
-  tags: install_weave_overlay_network
-
-
-- name: Copy kubectl admin config file to vagrant user directory
+- name: Copy kubectl admin config file to root user directory
   copy:
     src: "/etc/kubernetes/admin.conf"
     dest: "/root/.kube/config"
     remote_src: true
-    owner: vagrant
-    group: vagrant
+    owner: root
+    group: root
   when: inventory_hostname in groups['kubernetes_master']
   tags: copy_kubeconfig
 
-- name: Add kubectl autocompletion to bashrc for vagrant user
-  lineinfile:
-    dest: "/home/vagrant/.bashrc"
-    line: "source <(kubectl completion bash)"
-    state: present
+- name: Copy calico.yaml to kubernetes folder
+  copy: 
+    src: calico.yaml 
+    dest: /etc/kubernetes/calico.yaml
+    mode: 0644
+
+- name: Copy rbac-kdd.yaml to kubernetes folder
+  copy:
+    src: rbac-kdd.yaml
+    dest: /etc/kubernetes/rbac-kdd.yaml
+    mode: 0644
+
+- name: Install overlay network rbac
+  shell: "kubectl apply -f /etc/kubernetes/rbac-kdd.yaml"
   when: inventory_hostname in groups['kubernetes_master']
-  tags: add_kubectl_completion
+  tags: install_weave_overlay_network
+
+- name: Install overlay network
+  shell: "kubectl apply -f /etc/kubernetes/calico.yaml"
+  when: inventory_hostname in groups['kubernetes_master']
+  tags: install_weave_overlay_network
+
