@@ -76,10 +76,15 @@
     enabled: yes
   tags: start_kubelet
 
+- name: Check if admin.conf exists
+  stat:
+    path: /etc/kubernetes/admin.conf
+  register: stat_k8s_result
+
 - name: Start master node
   shell: "kubeadm init --pod-network-cidr=10.244.0.0/16"
   register: kubeadm_init
-  when: inventory_hostname in groups['kubernetes_master']
+  when: inventory_hostname in groups['kubernetes_master'] and stat_k8s_result.stat.exists == False
   tags: init_kubernetes_master
 
 - name: Generate join command from master
