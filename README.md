@@ -1,5 +1,5 @@
 # easy-kubernetes
-Setup a Kubernetes v1.18 cluster easily on CentOS 8
+Setup a Kubernetes v1.18 cluster easily on CentOS 8.1 in VmWare
 
 ## Overview
 
