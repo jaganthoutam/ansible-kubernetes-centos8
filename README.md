@@ -17,6 +17,7 @@ firewall-cmd --permanent --zone=public --add-port=8472/udp
 firewall-cmd --zone=public --add-masquerade --permanent
 # only if you want NodePorts exposed on control plane IP as well
 firewall-cmd --permanent --zone=public --add-port=30000-32767/tcp
+firewall-cmd --reload
 systemctl restart firewalld
 ```
 
@@ -31,6 +32,7 @@ firewall-cmd --zone=public --permanent --add-port=10255/tcp
 firewall-cmd --zone=public --permanent --add-port=8472/udp
 firewall-cmd --zone=public --permanent --add-port=30000-32767/tcp
 firewall-cmd --zone=public --add-masquerade --permanent
+firewall-cmd --reload
 systemctl restart firewalld
 ```
 
