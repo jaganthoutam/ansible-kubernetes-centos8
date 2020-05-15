@@ -3,6 +3,8 @@
 
 Firewalld for Master 
 ```bash
+systemctl restart firewalld
+systemctl enable firewalld
 firewall-cmd --permanent --zone=public --add-port=80/tcp
 firewall-cmd --permanent --zone=public --add-port=443/tcp
 firewall-cmd --permanent --zone=public --add-port=6443/tcp
@@ -20,6 +22,8 @@ systemctl restart firewalld
 
 Firewalld for Worker
 ```bash
+systemctl restart firewalld
+systemctl enable firewalld
 firewall-cmd --permanent --zone=public --add-port=80/tcp
 firewall-cmd --permanent --zone=public --add-port=443/tcp
 firewall-cmd --zone=public --permanent --add-port=10250/tcp
