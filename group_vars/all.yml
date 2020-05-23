@@ -3,3 +3,5 @@ calico: true
 flannel: false
 #Enable master to get pods
 master-taint: true
+#Add Ingress
+ingress: true
