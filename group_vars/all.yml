@@ -1,0 +1,5 @@
+#select overly network
+calico: true
+flannel: false
+#Enable master to get pods
+master-taint: true
