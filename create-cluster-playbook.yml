@@ -3,12 +3,6 @@
 - name: Setup a Kubernetes 1.18 cluster
   hosts: kubernetes_servers
   vars:
-#select overly network
-    calico: true
-    flannel: false
-#Enable master to get pods  
-    master-taint: true
-
   roles:
     - role: base
 
