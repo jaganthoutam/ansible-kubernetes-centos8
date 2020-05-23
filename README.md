@@ -44,7 +44,9 @@ Setup a Kubernetes v1.18 cluster easily on CentOS 8.1 in VmWare
 
 2. Install Ansible in your local mechine.
 
-3. Change the Master, worker nodes IP Adds in /inventories/main.ini
+3. git clone https://github.com/jaganthoutam/ansible-kubernetes-centos8
+
+4. Change the Master, worker nodes IP Adds in /inventories/main.ini
 
 		[kubernetes_master]
 		192.168.1.143
