@@ -123,7 +123,7 @@
 #Eable Master to deploy pods
 - name: Eable Master to deploy pods
   shell: "kubectl taint nodes --all node-role.kubernetes.io/master-"
-  when: inventory_hostname in groups['kubernetes_master'] and  master-taint is defined
+  when: inventory_hostname in groups['kubernetes_master'] and  master-taint|bool
   tags: enable_master_to_deploy_pods
 
 - name: mkdir for cni
@@ -140,7 +140,7 @@
 
 - name: Install overlay network
   shell: "kubectl apply -f /etc/kubernetes/cni/kube-flannel.yaml"
-  when: inventory_hostname in groups['kubernetes_master'] and flannel is defined
+  when: inventory_hostname in groups['kubernetes_master'] and flannel|bool
   tags: install_weave_overlay_network
   
 
@@ -160,12 +160,12 @@
 
 - name: Install calico overlay network rbac
   shell: "kubectl apply -f /etc/kubernetes/cni/rbac-kdd.yaml"
-  when: inventory_hostname in groups['kubernetes_master'] and calico is defined
+  when: inventory_hostname in groups['kubernetes_master'] and calico|bool
   tags: install_weave_overlay_network
 
 - name: Install calico overlay network
   shell: "kubectl apply -f /etc/kubernetes/cni/calico.yaml"
-  when: inventory_hostname in groups['kubernetes_master'] and calico is defined
+  when: inventory_hostname in groups['kubernetes_master'] and calico|bool
   tags: install_weave_overlay_network
 
 - name: mkdir for ingress
@@ -182,5 +182,5 @@
 
 - name: Install ingress
   shell: "kubectl apply -f /etc/kubernetes/ingress/nginx-ingress.yaml"
-  when: inventory_hostname in groups['kubernetes_master'] and ingress is defined
+  when: inventory_hostname in groups['kubernetes_master'] and ingress|bool
   tags: install_nginx_ingress
